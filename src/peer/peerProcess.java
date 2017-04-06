@@ -2,6 +2,7 @@ package peer;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import communication.Server;
 import config.Commoncfg;
@@ -12,6 +13,7 @@ public class peerProcess {
 	static int peerID;
 	static Commoncfg commoncfg;
 	static List<PeerInfo> peers;
+	static Map<Integer, NeighborInfo> neighborList;
 	
 	public static void main(String[] args) throws IOException {
 		String filepath = "Common.cfg";
