@@ -8,7 +8,7 @@ import java.util.*;
 public class PreferredNeighborsHandler implements Runnable {
     Map<Integer, NeighborInfo> neighborsMap;
     Map<Integer, NeighborInfo> interestedNeighborMap;
-    Set<NeighborInfo> prefferedNeighbors;
+    List<NeighborInfo> prefferedNeighbors;
     List<NeighborInfo> downLoadRateList;
     Commoncfg commoncfg;
 
@@ -18,7 +18,7 @@ public class PreferredNeighborsHandler implements Runnable {
         this.commoncfg = commoncfg;
         interestedNeighborMap = new HashMap<>();
         downLoadRateList = new ArrayList<>();
-        prefferedNeighbors = new HashSet<>();
+        prefferedNeighbors = new ArrayList<>();
 
     }
 
@@ -34,11 +34,15 @@ public class PreferredNeighborsHandler implements Runnable {
         int count = 0;
         getInteresetedNeighbor();
         sortByDownloadRate();
+        for (int i = 0; i < prefferedNeighbors.size(); i++) {
+           neighborsMap.get(prefferedNeighbors.get(i).getPeerID()).setPreferred(false);
+        }
+
         prefferedNeighbors.clear();
         int numofPreffered = commoncfg.getNum_Of_PreferredNeighbors();
 
         if (numofPreffered <= 0) {
-            throw new Exception("The number of preferredNeighbors can not be less or equal than 0 !");
+            throw new Exception("The number of preferred neighbors can not be less or equal than 0 !");
         } else if (numofPreffered >= interestedNeighborMap.size()) {
             count = interestedNeighborMap.size();
         } else {
@@ -46,7 +50,9 @@ public class PreferredNeighborsHandler implements Runnable {
         }
 
         for (int i = downLoadRateList.size() - 1; i > downLoadRateList.size() - 1 - count; i--) {
-            prefferedNeighbors.add(downLoadRateList.get(i));
+            NeighborInfo newPreffered = downLoadRateList.get(i);
+            prefferedNeighbors.add(newPreffered);
+            neighborsMap.get(newPreffered.getPeerID()).setPreferred(true);
         }
 
 
@@ -61,6 +67,7 @@ public class PreferredNeighborsHandler implements Runnable {
     }
 
     private void getInteresetedNeighbor() {
+        interestedNeighborMap.clear();
         for (Integer peerID : neighborsMap.keySet()) {
             if (neighborsMap.get(peerID).isInterested() == true) {
                 interestedNeighborMap.put(peerID, neighborsMap.get(peerID));
