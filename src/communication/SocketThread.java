@@ -29,7 +29,7 @@ public class SocketThread extends Thread {
             while ((temp = bufferedReader.readLine()) != null) {
                 info += temp;
                 System.out.println("Connection request:");
-                System.out.println("Messageï¼?" + info + " ,Client IPï¼?"
+                System.out.println("Message " + info + ", Client IP "
                         + socket.getInetAddress().getHostAddress());
             }
 
