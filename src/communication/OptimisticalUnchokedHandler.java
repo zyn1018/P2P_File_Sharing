@@ -46,7 +46,6 @@ public class OptimisticalUnchokedHandler implements Runnable {
         }
     }
 
-
     private void getChokedNeighbors() {
 
         chokedNeighbors.clear();
