@@ -22,7 +22,6 @@ public class PreferredNeighborsHandler implements Runnable {
         interestedNeighborMap = new HashMap<>();
         downLoadRateList = new ArrayList<>();
         prefferedNeighbors = new ArrayList<>();
-
     }
 
     public void run() {
@@ -34,9 +33,11 @@ public class PreferredNeighborsHandler implements Runnable {
     }
 
     private synchronized void selectPrefferedNeighbors() throws Exception {
+
         int count = 0;
         getInteresetedNeighbor();
         sortByDownloadRate();
+
         for (int i = 0; i < prefferedNeighbors.size(); i++) {
             neighborsMap.get(prefferedNeighbors.get(i).getPeerID()).setPreferred(false);
         }
@@ -65,11 +66,10 @@ public class PreferredNeighborsHandler implements Runnable {
                 neighborsMap.get(newPreffered.getPeerID()).setPreferred(true);
             }
         }
-
-
     }
 
     private void sortByDownloadRate() {
+
         downLoadRateList.clear();
 
         for (Integer peerID : interestedNeighborMap.keySet()) {
@@ -79,12 +79,14 @@ public class PreferredNeighborsHandler implements Runnable {
     }
 
     private void getInteresetedNeighbor() {
+
         interestedNeighborMap.clear();
 
         for (Integer peerID : neighborsMap.keySet()) {
+            NeighborInfo neighbor = neighborsMap.get(peerID);
 
-            if (neighborsMap.get(peerID).isInterested() == true) {
-                interestedNeighborMap.put(peerID, neighborsMap.get(peerID));
+            if (neighbor.isInterested() == true) {
+                interestedNeighborMap.put(peerID, neighbor);
             }
         }
     }
