@@ -1,6 +1,7 @@
 package communication;
 
 import config.Commoncfg;
+import config.PeerInfo;
 import peer.NeighborInfo;
 
 import java.util.*;
@@ -11,9 +12,11 @@ public class PreferredNeighborsHandler implements Runnable {
     List<NeighborInfo> prefferedNeighbors;
     List<NeighborInfo> downLoadRateList;
     Commoncfg commoncfg;
+    PeerInfo myPeerInfo;
 
     //Constructor
-    public PreferredNeighborsHandler(Commoncfg commoncfg, Map<Integer, NeighborInfo> neighborsMap) {
+    public PreferredNeighborsHandler(Commoncfg commoncfg, Map<Integer, NeighborInfo> neighborsMap, PeerInfo myPeerInfo) {
+        this.myPeerInfo = myPeerInfo;
         this.neighborsMap = neighborsMap;
         this.commoncfg = commoncfg;
         interestedNeighborMap = new HashMap<>();
@@ -35,7 +38,7 @@ public class PreferredNeighborsHandler implements Runnable {
         getInteresetedNeighbor();
         sortByDownloadRate();
         for (int i = 0; i < prefferedNeighbors.size(); i++) {
-           neighborsMap.get(prefferedNeighbors.get(i).getPeerID()).setPreferred(false);
+            neighborsMap.get(prefferedNeighbors.get(i).getPeerID()).setPreferred(false);
         }
 
         prefferedNeighbors.clear();
@@ -48,11 +51,18 @@ public class PreferredNeighborsHandler implements Runnable {
         } else {
             count = commoncfg.getNum_Of_PreferredNeighbors();
         }
-
-        for (int i = downLoadRateList.size() - 1; i > downLoadRateList.size() - 1 - count; i--) {
-            NeighborInfo newPreffered = downLoadRateList.get(i);
-            prefferedNeighbors.add(newPreffered);
-            neighborsMap.get(newPreffered.getPeerID()).setPreferred(true);
+        if (myPeerInfo.getFileStatus() == true) {
+            for (int i = 0; i < count; i++) {
+                NeighborInfo newPreffered = downLoadRateList.get((int)Math.random()*downLoadRateList.size());
+                prefferedNeighbors.add(newPreffered);
+                neighborsMap.get(newPreffered.getPeerID()).setPreferred(true);
+            }
+        } else {
+            for (int i = downLoadRateList.size() - 1; i > downLoadRateList.size() - 1 - count; i--) {
+                NeighborInfo newPreffered = downLoadRateList.get(i);
+                prefferedNeighbors.add(newPreffered);
+                neighborsMap.get(newPreffered.getPeerID()).setPreferred(true);
+            }
         }
 
 
