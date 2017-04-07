@@ -51,9 +51,10 @@ public class PreferredNeighborsHandler implements Runnable {
         } else {
             count = commoncfg.getNum_Of_PreferredNeighbors();
         }
+
         if (myPeerInfo.getFileStatus() == true) {
             for (int i = 0; i < count; i++) {
-                NeighborInfo newPreffered = downLoadRateList.get((int)Math.random()*downLoadRateList.size());
+                NeighborInfo newPreffered = downLoadRateList.get((int) Math.random() * downLoadRateList.size());
                 prefferedNeighbors.add(newPreffered);
                 neighborsMap.get(newPreffered.getPeerID()).setPreferred(true);
             }
@@ -70,6 +71,7 @@ public class PreferredNeighborsHandler implements Runnable {
 
     private void sortByDownloadRate() {
         downLoadRateList.clear();
+
         for (Integer peerID : interestedNeighborMap.keySet()) {
             downLoadRateList.add(interestedNeighborMap.get(peerID));
         }
@@ -78,7 +80,9 @@ public class PreferredNeighborsHandler implements Runnable {
 
     private void getInteresetedNeighbor() {
         interestedNeighborMap.clear();
+
         for (Integer peerID : neighborsMap.keySet()) {
+
             if (neighborsMap.get(peerID).isInterested() == true) {
                 interestedNeighborMap.put(peerID, neighborsMap.get(peerID));
             }
