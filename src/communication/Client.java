@@ -9,41 +9,75 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client {
+public class Client implements Runnable{
 
-    public void connect() {
+	private Socket socket;
+	private OutputStream outputStream;
+	private PrintWriter printWriter;
+	private InputStream inputStream;
+	private InputStreamReader inputStreamReader;
+	private BufferedReader bufferedReader;
+	private String IP_ADDR;   
+    private int PORT;
+	
+    public Client(String IP_ADDR, int PORT){
+    	this.IP_ADDR = IP_ADDR;
+    	this.PORT = PORT;
+    }
+    
+    private void connect() {
         try {
-            
-            Socket socket=new Socket("localhost",8888);
-            
-            
-            OutputStream outputStream=socket.getOutputStream();
-            PrintWriter printWriter=new PrintWriter(outputStream);
+        	System.out.println("Connect to peer:" + IP_ADDR +".");
+            socket=new Socket(IP_ADDR, PORT);
+            outputStream = socket.getOutputStream();
+            printWriter=new PrintWriter(outputStream);
+            inputStream=socket.getInputStream();
+            inputStreamReader=new InputStreamReader(inputStream);
+            bufferedReader=new BufferedReader(inputStreamReader);            
+        } 
+        catch (UnknownHostException e) {
+            e.printStackTrace();
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+	@Override
+	public void run() {
+		connect();
+		try {
             printWriter.print("Hello");
             printWriter.flush();
             socket.shutdownOutput();
-            
-            InputStream inputStream=socket.getInputStream();
-            InputStreamReader inputStreamReader=new InputStreamReader(inputStream);
-            BufferedReader bufferedReader=new BufferedReader(inputStreamReader);
             String info="";
             String temp=null;
-            while((temp=bufferedReader.readLine())!=null){
-                info+=temp;
-                System.out.println("Messageï¼?"+info);
-            }
             
-            bufferedReader.close();
-            inputStream.close();
-            printWriter.close();
-            outputStream.close();
-            socket.close();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
+            while((temp=bufferedReader.readLine())!=null){
+            	info+=temp;
+            	System.out.println("Message:"+info);
+            }
+		} 
+		catch (UnknownHostException e) {
+			 e.printStackTrace();
+		} 
+		catch (IOException e) {
+			 e.printStackTrace();
+		}
+		finally{
+			try{
+				bufferedReader.close();
+				inputStream.close();
+				printWriter.close();
+				outputStream.close();
+				socket.close();
+			}
+			catch (UnknownHostException e) {
+	            e.printStackTrace();
+	        } 
+			catch (IOException e) {
+	            e.printStackTrace();
+	        }
+		}
+	}
 }
