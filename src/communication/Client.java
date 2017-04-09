@@ -1,22 +1,27 @@
 package communication;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client implements Runnable{
+import commonutil.Utilities;
+
+public class Client	implements Runnable{
 
 	private Socket socket;
+	
 	private OutputStream outputStream;
-	private PrintWriter printWriter;
 	private InputStream inputStream;
-	private InputStreamReader inputStreamReader;
-	private BufferedReader bufferedReader;
+	private PipedOutputStream outputToHandler;
 	private String IP_ADDR;   
     private int PORT;
 	
@@ -25,15 +30,26 @@ public class Client implements Runnable{
     	this.PORT = PORT;
     }
     
-    private void connect() {
+    public Client(Socket socket){
+    	try{
+    		this.socket = socket;
+			this.outputStream = socket.getOutputStream();
+			this.inputStream = socket.getInputStream();
+			this.outputToHandler = new PipedOutputStream();
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+    }
+    
+    public void connect() {
         try {
         	System.out.println("Connect to peer:" + IP_ADDR +".");
-            socket=new Socket(IP_ADDR, PORT);
-            outputStream = socket.getOutputStream();
-            printWriter=new PrintWriter(outputStream);
-            inputStream=socket.getInputStream();
-            inputStreamReader=new InputStreamReader(inputStream);
-            bufferedReader=new BufferedReader(inputStreamReader);            
+            this.socket=new Socket(IP_ADDR, PORT);
+            this.outputStream = socket.getOutputStream();
+            this.inputStream = socket.getInputStream();
+            this.outputToHandler = new PipedOutputStream();
+            System.out.println("6666666666");
         } 
         catch (UnknownHostException e) {
             e.printStackTrace();
@@ -42,33 +58,64 @@ public class Client implements Runnable{
             e.printStackTrace();
         }
     }
-
+    
+    public PipedOutputStream getOutputToHandler(){
+    	return this.outputToHandler;
+    }
+    
+    public void send(byte[] data){
+    	try{
+    		this.outputStream.write(data);
+    		this.outputStream.flush();
+    	}
+    	catch(IOException e){
+    		e.printStackTrace();
+    	}
+    }
+    
+    public void receive() { 
+    	try{
+    		byte[] lengthBuffer = new byte[4];
+    		this.inputStream.read(lengthBuffer);
+    		int length = Utilities.byteArrayToInt(lengthBuffer);
+        
+    		if (length < 1) {
+    			return;
+    		}
+        
+    		this.outputToHandler.write(lengthBuffer);
+        
+    		//now read the data indicated by length and write it to buffer
+    		byte[] buffer = new byte[length];
+    		this.inputStream.read(buffer);
+    		this.outputToHandler.write(buffer);
+    		this.outputToHandler.flush();
+    	}
+    	catch(IOException e){
+    		e.printStackTrace();
+    	}
+    }
+    
+    void receiveHandShake() throws EOFException, IOException{
+        byte[] buffer = new byte[32];
+        //using read fully here to completely download the data before placing it in buffer
+        this.inputStream.read(buffer);
+        this.outputToHandler.write(buffer);
+        this.outputToHandler.flush();
+    }
+    
 	@Override
 	public void run() {
-		connect();
+		// TODO Auto-generated method stub
 		try {
-            printWriter.print("Hello");
-            printWriter.flush();
-            socket.shutdownOutput();
-            String info="";
-            String temp=null;
-            
-            while((temp=bufferedReader.readLine())!=null){
-            	info+=temp;
-            	System.out.println("Message:"+info);
+			System.out.println("Client Thread Start!");
+            while(true){
+            	this.receive();
             }
 		} 
-		catch (UnknownHostException e) {
-			 e.printStackTrace();
-		} 
-		catch (IOException e) {
-			 e.printStackTrace();
-		}
 		finally{
 			try{
-				bufferedReader.close();
 				inputStream.close();
-				printWriter.close();
 				outputStream.close();
 				socket.close();
 			}

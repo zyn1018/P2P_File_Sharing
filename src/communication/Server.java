@@ -1,6 +1,8 @@
 package communication;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -10,10 +12,11 @@ public class Server implements Runnable{
 	private int listenport;
 	private ServerSocket serverSocket;
 	private static final int ACCEPT_TIMEOUT = 1000;
-	
-	public Server(int port) throws UnknownHostException, IOException {
+	private CommunicationManager communicationManager;
+	public Server(int port,CommunicationManager communicationManager) throws UnknownHostException, IOException {
 		this.listenport = port;
 		this.serverSocket = new ServerSocket(port);
+		this.communicationManager = communicationManager;
 	    //this.serverSocket.setSoTimeout(ACCEPT_TIMEOUT);
 	}
 
@@ -25,9 +28,10 @@ public class Server implements Runnable{
         	System.out.println("Listen...");
         	Socket socket=null;
         	try{
-        		socket=serverSocket.accept();                        
-        		Thread workThread=new Thread(new MessageHandler(socket));    
-        		workThread.start();                                    
+        		socket=serverSocket.accept();
+        		Client newClient = new Client(socket);
+        		Thread handlerThread = new Thread(new MessageHandler(newClient,this.communicationManager));    
+        		handlerThread.start();                                    
         	}
         	/*catch(InterruptedIOException iioex){
         		try{

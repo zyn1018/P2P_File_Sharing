@@ -1,5 +1,7 @@
 package peer;
 
+import communication.Client;
+
 import java.net.Socket;
 
 public class NeighborInfo implements Comparable{
@@ -12,72 +14,123 @@ public class NeighborInfo implements Comparable{
     private double downloadRate;
     private boolean hasCompleteFile;
     private boolean isInterested;
-
+    private boolean interest;
+    private boolean isChoked;
+    private boolean choke;
+    private Client client;
+    
     public NeighborInfo(int peerID, String hostName, int port, Boolean hasCompleteFile) {
         this.peerID = peerID;
         this.hostName = hostName;
         this.port = port;
         this.hasCompleteFile = hasCompleteFile;
     }
-
+    
     public int getPeerID() {
-        return peerID;
-    }
+		return peerID;
+	}
 
-    public void setPeerID(int peerID) {
-        this.peerID = peerID;
-    }
+	public void setPeerID(int peerID) {
+		this.peerID = peerID;
+	}
 
-    public Socket getSocket() {
-        return socket;
-    }
+	public Socket getSocket() {
+		return socket;
+	}
 
-    public void setSocket(Socket socket) {
-        this.socket = socket;
-    }
+	public void setSocket(Socket socket) {
+		this.socket = socket;
+	}
 
-    public boolean isPreferred() {
-        return preferred;
-    }
+	public String getHostName() {
+		return hostName;
+	}
 
-    public void setPreferred(boolean preferred) {
-        this.preferred = preferred;
-    }
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
 
-    public boolean isOptimisticallyUnchoked() {
-        return optimisticallyUnchoked;
-    }
+	public int getPort() {
+		return port;
+	}
 
-    public void setOptimisticallyUnchoked(boolean optimisticallyUnchoked) {
-        this.optimisticallyUnchoked = optimisticallyUnchoked;
-    }
+	public void setPort(int port) {
+		this.port = port;
+	}
 
-    public double getDownloadRate() {
-        return downloadRate;
-    }
+	public boolean isPreferred() {
+		return preferred;
+	}
 
-    public void setDownloadRate(double downloadRate) {
-        this.downloadRate = downloadRate;
-    }
+	public void setPreferred(boolean preferred) {
+		this.preferred = preferred;
+	}
 
-    public boolean isHasCompleteFile() { return hasCompleteFile;}
+	public boolean isOptimisticallyUnchoked() {
+		return optimisticallyUnchoked;
+	}
 
-    public void setHasCompleteFile(boolean hasCompleteFile) { this.hasCompleteFile = hasCompleteFile;}
+	public void setOptimisticallyUnchoked(boolean optimisticallyUnchoked) {
+		this.optimisticallyUnchoked = optimisticallyUnchoked;
+	}
 
-    public boolean isInterested() { return isInterested;}
+	public double getDownloadRate() {
+		return downloadRate;
+	}
 
-    public void setInterested(boolean interested) { isInterested = interested;}
+	public void setDownloadRate(double downloadRate) {
+		this.downloadRate = downloadRate;
+	}
 
+	public boolean isHasCompleteFile() {
+		return hasCompleteFile;
+	}
 
-    public String getHostName() { return hostName;}
+	public void setHasCompleteFile(boolean hasCompleteFile) {
+		this.hasCompleteFile = hasCompleteFile;
+	}
 
-    public void setHostName(String hostName) { this.hostName = hostName;}
+	public boolean isInterested() {
+		return isInterested;
+	}
 
-    public int getPort() { return port;}
+	public void setInterested(boolean isInterested) {
+		this.isInterested = isInterested;
+	}
 
-    public void setPort(int port) { this.port = port;}
+	public boolean isInterest() {
+		return interest;
+	}
 
-    @Override
+	public void setInterest(boolean interest) {
+		this.interest = interest;
+	}
+
+	public boolean isChoked() {
+		return isChoked;
+	}
+
+	public void setChoked(boolean isChoked) {
+		this.isChoked = isChoked;
+	}
+
+	public boolean isChoke() {
+		return choke;
+	}
+
+	public void setChoke(boolean choke) {
+		this.choke = choke;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	@Override
     public int compareTo(Object o) {
         NeighborInfo neighborInfo = (NeighborInfo)o;
         return (int) (this.downloadRate - neighborInfo.downloadRate);

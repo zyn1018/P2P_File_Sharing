@@ -12,9 +12,9 @@ public class Test_Common {
 		System.out.println("NumberOfPreferredNeighbors = " + commoncfg.Num_Of_PreferredNeighbors);
 		System.out.println("UnchokingInterval = " + commoncfg.Unchoking_Interval + "s");
 		System.out.println("OptimisticUnchokingInterval = " + commoncfg.Optimistic_Unchoking_Interval + "s");
-		System.out.println("fileName is " + commoncfg.fileName);
-		System.out.println("fileSize = " + commoncfg.fileSize + " bytes");
-		System.out.println("pieceSize = " + commoncfg.pieceSize + " bytes");
+		System.out.println("FileName is " + commoncfg.FileName);
+		System.out.println("FileSize = " + commoncfg.FileSize + "bytes");
+		System.out.println("PieceSize = " + commoncfg.PieceSize + "bytes");
 
 	}
 

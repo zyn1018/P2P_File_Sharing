@@ -72,7 +72,7 @@ public class Logger
              
                FileWriter fw = new FileWriter(filename,true); //the true will append the new data
                BufferedWriter bw = new BufferedWriter(fw);
-               String str = getDate()+": Peer ï¿½?"+peer1+"ï¿½? makes a connection to Peer "+peer2+".";
+               String str = getDate()+": Peer ï¼?"+peer1+"ï¼? makes a connection to Peer "+peer2+".";
                bw.write(str);//appends the string to the file
                bw.newLine();
                bw.close();
@@ -187,7 +187,7 @@ public class Logger
       
   }
   
-  //Writing Log for receiving â€˜haveï¿½? message
+  //Writing Log for receiving â€˜haveâ€? message
   public void Have(String peer1, String peer2, int index)
   {
 	  		String filename = "peer_" + peer1+"/log_peer_"+peer1+".log";
@@ -213,7 +213,7 @@ public class Logger
       
   }
   
-  //Writing Log for  receiving â€˜interestedï¿½? message
+  //Writing Log for  receiving â€˜interestedâ€? message
   public void Interested(String peer1, String peer2)
   {
 	  String filename = "peer_" + peer1+"/log_peer_"+peer1+".log";
@@ -238,7 +238,7 @@ public class Logger
             }
   }
   
-//Writing Log for receiving â€˜not interestedï¿½? message
+//Writing Log for receiving â€˜not interestedâ€? message
   public void NotInterested(String peer1, String peer2)
   {
 	  String filename = "peer_" + peer1+"/log_peer_"+peer1+".log";

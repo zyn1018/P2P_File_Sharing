@@ -7,9 +7,9 @@ public class Commoncfg {
 	int Num_Of_PreferredNeighbors;
 	int Unchoking_Interval;
 	int Optimistic_Unchoking_Interval;
-	String fileName;
-	int fileSize;
-	int pieceSize;
+	String FileName;
+	int FileSize;
+	int PieceSize;
 
 	public Commoncfg() {
 
@@ -19,9 +19,9 @@ public class Commoncfg {
 		Num_Of_PreferredNeighbors = nop;
 		Unchoking_Interval = ui;
 		Optimistic_Unchoking_Interval = oui;
-		fileName = fn;
-		fileSize = fs;
-		pieceSize = ps;
+		FileName = fn;
+		FileSize = fs;
+		PieceSize = ps;
 	}
 
 	public int getNum_Of_PreferredNeighbors() {
@@ -49,27 +49,27 @@ public class Commoncfg {
 	}
 
 	public String getFileName() {
-		return fileName;
+		return FileName;
 	}
 
 	public void setFileName(String fileName) {
-		this.fileName = fileName;
+		FileName = fileName;
 	}
 
 	public int getFileSize() {
-		return fileSize;
+		return FileSize;
 	}
 
 	public void setFileSize(int fileSize) {
-		this.fileSize = fileSize;
+		FileSize = fileSize;
 	}
 
 	public int getPieceSize() {
-		return pieceSize;
+		return PieceSize;
 	}
 
 	public void setPieceSize(int pieceSize) {
-		this.pieceSize = pieceSize;
+		PieceSize = pieceSize;
 	}
 
 }

@@ -14,7 +14,7 @@ public abstract class Message implements Serializable{
                 this.messageBytes = msg;
         }
         
-        public byte[] getMessgeBytes()
+        public byte[] getMessageBytes()
         {
                 return messageBytes;
         }
