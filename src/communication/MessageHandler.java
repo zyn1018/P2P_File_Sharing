@@ -1,15 +1,11 @@
 package communication;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.io.PipedInputStream;
-import java.net.Socket;
-
-import message.Message;
-import message.HandshakeMessage;
-import message.ActualMessage;
 import commonutil.Utilities;
+import message.HandshakeMessage;
+import message.Message;
+
+import java.io.IOException;
+import java.io.PipedInputStream;
 
 public class MessageHandler implements Runnable{
 	private int connectedPeerID;
@@ -39,10 +35,8 @@ public class MessageHandler implements Runnable{
 			msg = new HandshakeMessage(myPeerID);
 			client.send(msg.getMessageBytes());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
@@ -61,7 +55,6 @@ public class MessageHandler implements Runnable{
 			int peerID = Utilities.byteArrayToInt(peerIDBuffer);
 			System.out.println("Receive HandShake from peer" + peerID + ".");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -69,9 +62,7 @@ public class MessageHandler implements Runnable{
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		try{
-			System.out.println("9999999999");
 			this.inputFromClient.connect(this.client.getOutputToHandler());
 			this.sendHandShake();
 			this.receiveAndProcessHandShake();

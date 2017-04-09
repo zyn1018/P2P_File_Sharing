@@ -1,5 +1,8 @@
 package peer;
 
+import communication.Client;
+import communication.CommunicationManager;
+import communication.MessageHandler;
 import communication.Server;
 import config.Commoncfg;
 import config.Parser;
@@ -10,10 +13,6 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import communication.Client;
-import communication.CommunicationManager;
-import communication.MessageHandler;
 
 public class PeerProcess {
     private int myPeerID;
@@ -79,10 +78,8 @@ public class PeerProcess {
 				handlerThread.start();
 				neighborList.get(peerID).setClient(newClient);
 			}
-			System.out.println(peerID + neighborList.get(peerID).getHostName());
 		}
-		
-		System.out.println("wwwwwww");
+
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
