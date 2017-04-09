@@ -71,7 +71,6 @@ public class MessageHandler implements Runnable{
 	@Override
 	public void run() {
 		try{
-			System.out.println("9999999999");
 			this.inputFromClient.connect(this.client.getOutputToHandler());
 			this.sendHandShake();
 			this.receiveAndProcessHandShake();

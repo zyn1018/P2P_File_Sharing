@@ -1,19 +1,10 @@
 package communication;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintWriter;
+import commonutil.Utilities;
+
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
-import commonutil.Utilities;
 
 public class Client	implements Runnable{
 
@@ -49,7 +40,6 @@ public class Client	implements Runnable{
             this.outputStream = socket.getOutputStream();
             this.inputStream = socket.getInputStream();
             this.outputToHandler = new PipedOutputStream();
-            System.out.println("6666666666");
         } 
         catch (UnknownHostException e) {
             e.printStackTrace();
