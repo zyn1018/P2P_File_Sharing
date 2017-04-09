@@ -8,7 +8,7 @@ import commonutil.Utilities;
 public class UnchokeMessage extends ActualMessage{
     private static final long serialVersionUID = 5L;
 
-    public UnchokeMessage() throws IOException, InterruptedException{
+    public UnchokeMessage() throws IOException{
         super(1,MessageType.unchoke);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 		out.write(Utilities.intToByteArray(this.msgLength));

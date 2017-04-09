@@ -9,12 +9,12 @@ public class ActualMessage extends Message{
 	protected int msgLength;
 	protected MessageType msgType = null;
         
-	public ActualMessage(MessageType msgType) throws InterruptedException, IOException{
+	public ActualMessage(MessageType msgType) throws IOException{
 		this.msgLength = 1;
 		this.msgType = msgType;
 	}
         
-	public ActualMessage(int msgLength, MessageType msgType) throws InterruptedException, IOException{
+	public ActualMessage(int msgLength, MessageType msgType) throws IOException{
 		this.msgType = msgType;
 		this.msgLength = msgLength;
 	}

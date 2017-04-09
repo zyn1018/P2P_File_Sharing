@@ -9,7 +9,7 @@ public class HaveMessage extends ActualMessage {
 	private static final long serialVersionUID = 8L;
 	private int index;
 	
-	public HaveMessage(int index) throws IOException, InterruptedException{
+	public HaveMessage(int index) throws IOException{
 		super(5,MessageType.have);
 		this.index = index;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

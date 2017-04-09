@@ -1,6 +1,7 @@
 package communication;
 
 import commonutil.Utilities;
+import file.Bitfield;
 import message.HandshakeMessage;
 import message.Message;
 
@@ -13,12 +14,13 @@ public class MessageHandler implements Runnable{
 	private CommunicationManager communicationManager;
 	private Client client;
 	private PipedInputStream inputFromClient;
-	
+	private Bitfield myBitField;
 	public MessageHandler(Client client,CommunicationManager communicationManager){
 		this.client = client;
 		this.communicationManager = communicationManager;
 		this.inputFromClient = new PipedInputStream();
 		this.myPeerID = this.communicationManager.getMyPeerID();
+		this.myBitField = new Bitfield(communicationManager.getPieceNum(),communicationManager.isHasFile());
 	}
 	
 	public MessageHandler(int connectedPeerID, Client client,CommunicationManager communicationManager){
@@ -27,6 +29,7 @@ public class MessageHandler implements Runnable{
 		this.communicationManager = communicationManager;
 		this.inputFromClient = new PipedInputStream();
 		this.myPeerID = this.communicationManager.getMyPeerID();
+		this.myBitField = new Bitfield(communicationManager.getPieceNum(),communicationManager.isHasFile());
 	}
 	
 	public void sendHandShake(){
@@ -36,10 +39,11 @@ public class MessageHandler implements Runnable{
 			client.send(msg.getMessageBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
-        
+	}
+	
+	public void sendMessage(Message msg){
+		client.send(msg.getMessageBytes());
 	}
 	
 	public void receiveAndProcessHandShake(){
@@ -54,15 +58,20 @@ public class MessageHandler implements Runnable{
 			peerIDBuffer[3] = handshakeMsg[31];
 			int peerID = Utilities.byteArrayToInt(peerIDBuffer);
 			System.out.println("Receive HandShake from peer" + peerID + ".");
+			this.connectedPeerID = peerID;
+			this.communicationManager.AddClient(connectedPeerID, this.client);
+			this.sendMessage(this.myBitField.genBitFieldMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
+	
 	@Override
 	public void run() {
 		try{
+			System.out.println("9999999999");
 			this.inputFromClient.connect(this.client.getOutputToHandler());
 			this.sendHandShake();
 			this.receiveAndProcessHandShake();

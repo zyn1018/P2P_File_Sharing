@@ -43,6 +43,7 @@ public class OptimisticalUnchokedHandler implements Runnable {
         if (chokedNeighbors.size() > 0) {
             optimisticalUnchokedNeighbor = chokedNeighbors.get((int) Math.random() * chokedNeighbors.size());
             neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()).setOptimisticallyUnchoked(true);
+
         }
     }
 
@@ -52,7 +53,7 @@ public class OptimisticalUnchokedHandler implements Runnable {
 
         for (Integer peerID : interestedNeighborMap.keySet()) {
             NeighborInfo neighbor = interestedNeighborMap.get(peerID);
-            if (neighbor.isPreferred() == false && neighbor.isOptimisticallyUnchoked() == false) {
+            if (neighbor.isChoked()) {
                 chokedNeighbors.add(neighbor);
             }
         }
@@ -77,7 +78,7 @@ public class OptimisticalUnchokedHandler implements Runnable {
         for (Integer peerID : neighborsMap.keySet()) {
             NeighborInfo neighbor = neighborsMap.get(peerID);
 
-            if (neighbor.isInterested() == true) {
+            if (neighbor.isInterest() == true) {
                 interestedNeighborMap.put(peerID, neighbor);
             }
         }

@@ -1,8 +1,8 @@
 package message;
+import commonutil.Utilities;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import commonutil.Utilities;
 
 
 public class PieceMessage extends ActualMessage{
@@ -10,7 +10,7 @@ public class PieceMessage extends ActualMessage{
 	private int index;
 	private byte[] content;
 	
-	public PieceMessage(int index,byte[] content) throws IOException, InterruptedException{
+	public PieceMessage(int index,byte[] content) throws IOException{
 	        super(5 + content.length, MessageType.piece);
 	        this.index = index;
 	        this.content = content;

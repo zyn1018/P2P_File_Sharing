@@ -9,7 +9,7 @@ public class BitFieldMessage extends ActualMessage{
 	private static final long serialVersionUID = 9L;
 	private byte[] bitfield;
 	  
-	public BitFieldMessage(byte[] bitfield) throws IOException, InterruptedException{
+	public BitFieldMessage(byte[] bitfield) throws IOException {
 		super(1 + bitfield.length, MessageType.bitfield);
 		this.bitfield = bitfield;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

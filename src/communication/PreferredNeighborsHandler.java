@@ -85,7 +85,7 @@ public class PreferredNeighborsHandler implements Runnable {
         for (Integer peerID : neighborsMap.keySet()) {
             NeighborInfo neighbor = neighborsMap.get(peerID);
 
-            if (neighbor.isInterested() == true) {
+            if (neighbor.isInterest() == true) {
                 interestedNeighborMap.put(peerID, neighbor);
             }
         }

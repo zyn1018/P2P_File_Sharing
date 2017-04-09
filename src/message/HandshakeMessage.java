@@ -11,7 +11,7 @@ public class HandshakeMessage extends Message{
 	private static byte[] zero= {0,0,0,0,0,0,0,0,0,0};
 	private int peerID;
 	
-	public HandshakeMessage(int peerID) throws IOException, InterruptedException{
+	public HandshakeMessage(int peerID) throws IOException{
          ByteArrayOutputStream out = new ByteArrayOutputStream();
          out.write(header.getBytes());
          out.write(zero);  //10 bytes zero bits

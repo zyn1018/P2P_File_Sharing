@@ -9,7 +9,7 @@ public class RequestMessage extends ActualMessage {
 	private static final long serialVersionUID = 10L;
 	private int index;
 	
-	public RequestMessage(int index) throws IOException, InterruptedException{
+	public RequestMessage(int index) throws IOException{
 		super(5,MessageType.request);
 		this.index = index;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

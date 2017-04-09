@@ -18,5 +18,13 @@ public class Utilities
 	        (byte) (a & 0xFF)  
 	    };  
 	} 
+	
+	public static byte intToByte(int a){
+		return (byte) a;
+	}
+	
+	public static int byteToInt(byte b){
+		return b & 0xFF;
+	}
     
 }

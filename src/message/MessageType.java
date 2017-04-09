@@ -16,6 +16,7 @@ public enum MessageType implements Serializable{
     private MessageType(int msgType){
         this.msgType = (byte)msgType;
     }
+
    /* public static MessageType getMessageType(int value){
     	switch(value){ 
     		case 0: return MessageType.choke;
