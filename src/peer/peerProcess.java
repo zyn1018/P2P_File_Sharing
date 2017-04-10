@@ -21,6 +21,8 @@ public class PeerProcess {
     private List<PeerInfo> peers;
     private Map<Integer, NeighborInfo> neighborList;
     private CommunicationManager communicationManager;
+    private boolean hasFile;
+    
     public PeerProcess(int myPeerID){
     	try{
     		this.myPeerID = myPeerID;
@@ -50,6 +52,7 @@ public class PeerProcess {
     			}
     			else {
     				myPort = peer.getPort();
+    				hasFile = peer.getFileStatus();
     			}
     		}	
     	}
@@ -61,7 +64,7 @@ public class PeerProcess {
     private void startProcess(){
     	Thread serverThread;
 		try {
-			communicationManager = new CommunicationManager(myPeerID,commoncfg,neighborList);
+			communicationManager = new CommunicationManager(myPeerID,commoncfg,neighborList,hasFile);
 			serverThread = new Thread(new Server(myPort,communicationManager));
 			serverThread.start();
 		
@@ -78,13 +81,12 @@ public class PeerProcess {
 				handlerThread.start();
 				neighborList.get(peerID).setClient(newClient);
 			}
+			System.out.println(peerID + neighborList.get(peerID).getHostName());
 		}
 
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

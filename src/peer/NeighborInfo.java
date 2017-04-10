@@ -15,8 +15,8 @@ public class NeighborInfo implements Comparable{
     private boolean hasCompleteFile;
     private boolean isInterested;
     private boolean interest;
-    private boolean isChoked;
-    private boolean choke;
+    private boolean isChoked = true;
+    private boolean choke = true;
     private Client client;
     
     public NeighborInfo(int peerID, String hostName, int port, Boolean hasCompleteFile) {
