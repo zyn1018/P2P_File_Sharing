@@ -32,7 +32,6 @@ public class OptimisticalUnchokedHandler implements Runnable {
     public void run() {
         try {
             selectOptimisticalUnchokedNeighbor();
-
             Thread.sleep(commoncfg.getOptimistic_Unchoking_Interval() * 1000);
         } catch (Exception e) {
             e.printStackTrace();
