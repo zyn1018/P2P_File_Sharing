@@ -1,11 +1,6 @@
 package communication;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class SocketThread extends Thread {
@@ -16,10 +11,10 @@ public class SocketThread extends Thread {
     }
 
     public void run() {
-        
+
         try {
             InputStream inputStream = socket.getInputStream();
-            
+
             InputStreamReader inputStreamReader = new InputStreamReader(
                     inputStream);
             BufferedReader bufferedReader = new BufferedReader(
@@ -48,13 +43,13 @@ public class SocketThread extends Thread {
 
     }
 
-	public Socket getSocket() {
-		return socket;
-	}
+    public Socket getSocket() {
+        return socket;
+    }
 
-	public void setSocket(Socket socket) {
-		this.socket = socket;
-	}
-    
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
 
 }
