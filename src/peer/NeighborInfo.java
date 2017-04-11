@@ -17,6 +17,7 @@ public class NeighborInfo implements Comparable {
     private boolean interest;
     private boolean isChoked = true;
     private boolean choke = true;
+    private int downloadedPieceNum = 0;
     private Client client;
 
     public NeighborInfo(int peerID, String hostName, int port, Boolean hasCompleteFile) {
@@ -129,6 +130,16 @@ public class NeighborInfo implements Comparable {
     public void setClient(Client client) {
         this.client = client;
     }
+
+
+    public int getDownloadedPieceNum() {
+        return downloadedPieceNum;
+    }
+
+    public void setDownloadedPieceNum(int downloadedPieceNum) {
+        this.downloadedPieceNum = downloadedPieceNum;
+    }
+
 
     @Override
     public int compareTo(Object o) {

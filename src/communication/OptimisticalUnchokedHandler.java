@@ -44,6 +44,7 @@ public class OptimisticalUnchokedHandler implements Runnable {
         getInteresetedNeighbor();
         getChokedNeighbors();
 
+
         if (prevOptimisticalUnchokedNeighbor != null) {
             Message msg = null;
             try {

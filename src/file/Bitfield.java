@@ -12,6 +12,7 @@ public class Bitfield {
 
     private int length;
     private List<Integer> bits;
+    private boolean hasCompleteFile;
 
     public Bitfield(int length, Boolean hasfile) {
         this.length = length;
@@ -19,21 +20,46 @@ public class Bitfield {
         for (int i = 0; i < bits.size(); i++) {
             if (hasfile) {
                 bits.set(i, 1);
+                this.hasCompleteFile = true;
             } else {
                 bits.set(i, 0);
+                this.hasCompleteFile = false;
             }
         }
     }
 
-    public int getBit(int index) {
+    synchronized public int getBit(int index) {
         return bits.get(index);
     }
 
-    public void setBit(int index, int value) {
+    synchronized public void setBit(int index, int value) {
         bits.set(index, value);
+        if (this.hasCompleteFile == true) {
+            return;
+        } else {
+            this.hasCompleteFile = true;
+            for (int i = 0; i < bits.size(); i++) {
+                if (bits.get(i) == 0)
+                    this.hasCompleteFile = false;
+            }
+        }
     }
 
-    public Message genBitFieldMessage() throws IOException {
+    synchronized public boolean isHasCompleteFile() {
+        return this.hasCompleteFile;
+    }
+
+    synchronized public int getPieceNum() {
+        int pieceNum = 0;
+        for (int i = 0; i < bits.size(); i++) {
+            if (bits.get(i) == 1)
+                pieceNum++;
+        }
+        return pieceNum;
+
+    }
+
+    synchronized public Message genBitFieldMessage() throws IOException {
         int size = bits.size();
         int messagelength = bits.size() / 8;
         int leftbits = bits.size() % 8;

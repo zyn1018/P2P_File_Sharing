@@ -1,7 +1,6 @@
 package communication;
 
 import config.Commoncfg;
-import config.PeerInfo;
 import file.Bitfield;
 import message.ChokeMessage;
 import message.Message;
@@ -16,26 +15,28 @@ public class PreferredNeighborsHandler implements Runnable {
     Map<Integer, NeighborInfo> prefferedNeighbors;
     List<NeighborInfo> downLoadRateList;
     Commoncfg commoncfg;
-    PeerInfo myPeerInfo;
-    Bitfield bitfield;
+    Bitfield myBitfield;
 
 
     //Constructor
-    public PreferredNeighborsHandler(Commoncfg commoncfg, Map<Integer, NeighborInfo> neighborsMap, PeerInfo myPeerInfo, Bitfield bitfield) {
-        this.myPeerInfo = myPeerInfo;
+    public PreferredNeighborsHandler(Commoncfg commoncfg, Map<Integer, NeighborInfo> neighborsMap, Bitfield myBitfield) {
+        this.myBitfield = myBitfield;
         this.neighborsMap = neighborsMap;
         this.commoncfg = commoncfg;
         interestedNeighborMap = new HashMap<>();
         downLoadRateList = new ArrayList<>();
         prefferedNeighbors = new HashMap<>();
-        this.bitfield = bitfield;
 
     }
 
     public void run() {
         try {
             selectPrefferedNeighbors();
+            Map<Integer, Integer> prevPieceNumMap = getPieceNum();
             Thread.sleep(commoncfg.getUnchoking_Interval() * 1000);
+            Map<Integer, Integer> nowPieceNumMap = getPieceNum();
+            calculateAndUpdateDownloadRate(prevPieceNumMap, nowPieceNumMap);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +62,7 @@ public class PreferredNeighborsHandler implements Runnable {
             count = commoncfg.getNum_Of_PreferredNeighbors();
         }
 
-        if (myPeerInfo.getFileStatus() == true) {
+        if (myBitfield.isHasCompleteFile() == true) {
             for (int i = 0; i < count; i++) {
                 NeighborInfo newPreffered = downLoadRateList.get((int) Math.random() * downLoadRateList.size());
                 prefferedNeighbors.put(newPreffered.getPeerID(), newPreffered);
@@ -118,6 +119,27 @@ public class PreferredNeighborsHandler implements Runnable {
 
             if (neighbor.isInterest() == true) {
                 interestedNeighborMap.put(peerID, neighbor);
+            }
+        }
+    }
+
+    private Map<Integer, Integer> getPieceNum() {
+        Map<Integer, Integer> pieceNumMap = new HashMap<>();
+        for (Integer peerID : neighborsMap.keySet()) {
+            NeighborInfo neighbor = neighborsMap.get(peerID);
+            if (neighbor != null) {
+                pieceNumMap.put(neighbor.getPeerID(), neighbor.getDownloadedPieceNum());
+            }
+        }
+        return pieceNumMap;
+    }
+
+    private void calculateAndUpdateDownloadRate(Map<Integer, Integer> prev, Map<Integer, Integer> now) {
+        for (Integer peerID : prev.keySet()) {
+            int pieceNumDiff = now.get(peerID) - prev.get(peerID);
+            if (pieceNumDiff >= 0) {
+                double downloadRate = pieceNumDiff * commoncfg.getPieceSize() * 1.0 / commoncfg.getUnchoking_Interval();
+                neighborsMap.get(peerID).setDownloadRate(downloadRate);
             }
         }
     }
