@@ -31,8 +31,11 @@ public class OptimisticalUnchokedHandler implements Runnable {
 
     public void run() {
         try {
-            selectOptimisticalUnchokedNeighbor();
-            Thread.sleep(commoncfg.getOptimistic_Unchoking_Interval() * 1000);
+            while (true) {
+                selectOptimisticalUnchokedNeighbor();
+//            System.out.println("Select optimistical unchoked neighbor: Peer " + optimisticalUnchokedNeighbor.getPeerID());
+                Thread.sleep(commoncfg.getOptimistic_Unchoking_Interval() * 1000);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,16 +43,15 @@ public class OptimisticalUnchokedHandler implements Runnable {
 
     private synchronized void selectOptimisticalUnchokedNeighbor() {
         NeighborInfo prevOptimisticalUnchokedNeighbor = getPrevOptimisticalUnchokedNeighbor();
-
         getInteresetedNeighbor();
         getChokedNeighbors();
-
 
         if (prevOptimisticalUnchokedNeighbor != null) {
             Message msg = null;
             try {
                 msg = new ChokeMessage();
                 neighborsMap.get(prevOptimisticalUnchokedNeighbor.getPeerID()).setOptimisticallyUnchoked(false);
+                neighborsMap.get(prevOptimisticalUnchokedNeighbor.getPeerID()).setChoked(true);
                 neighborsMap.get(prevOptimisticalUnchokedNeighbor.getPeerID()).getClient().send(msg.getMessageBytes());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -62,13 +64,16 @@ public class OptimisticalUnchokedHandler implements Runnable {
             try {
                 msg = new UnchokeMessage();
                 neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()).setOptimisticallyUnchoked(true);
+                neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()).setChoked(false);
                 neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()).getClient().send(msg.getMessageBytes());
+                System.out.println("Unchoke " + neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()));
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
 
     private void getChokedNeighbors() {
 

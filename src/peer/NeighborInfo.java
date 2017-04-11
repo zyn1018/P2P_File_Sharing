@@ -4,7 +4,7 @@ import communication.Client;
 
 import java.net.Socket;
 
-public class NeighborInfo implements Comparable {
+public class NeighborInfo implements Comparable{
     private int peerID;
     private Socket socket;
     private String hostName;
@@ -17,133 +17,136 @@ public class NeighborInfo implements Comparable {
     private boolean interest;
     private boolean isChoked = true;
     private boolean choke = true;
-    private int downloadedPieceNum = 0;
     private Client client;
+    private int downloadedPieceNum = 0;
+    
+    public int getDownloadedPieceNum() {
+		return downloadedPieceNum;
+	}
 
-    public NeighborInfo(int peerID, String hostName, int port, Boolean hasCompleteFile) {
+	public void setDownloadedPieceNum(int downloadedPieceNum) {
+		this.downloadedPieceNum = downloadedPieceNum;
+	}
+	
+	public void downloadedPieceNumIncrement() {
+		this.downloadedPieceNum += 1;
+	}
+	
+	public NeighborInfo(int peerID, String hostName, int port, Boolean hasCompleteFile, Client client) {
         this.peerID = peerID;
         this.hostName = hostName;
         this.port = port;
         this.hasCompleteFile = hasCompleteFile;
-    }
-
-    public int getPeerID() {
-        return peerID;
-    }
-
-    public void setPeerID(int peerID) {
-        this.peerID = peerID;
-    }
-
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public void setSocket(Socket socket) {
-        this.socket = socket;
-    }
-
-    public String getHostName() {
-        return hostName;
-    }
-
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public boolean isPreferred() {
-        return preferred;
-    }
-
-    public void setPreferred(boolean preferred) {
-        this.preferred = preferred;
-    }
-
-    public boolean isOptimisticallyUnchoked() {
-        return optimisticallyUnchoked;
-    }
-
-    public void setOptimisticallyUnchoked(boolean optimisticallyUnchoked) {
-        this.optimisticallyUnchoked = optimisticallyUnchoked;
-    }
-
-    public double getDownloadRate() {
-        return downloadRate;
-    }
-
-    public void setDownloadRate(double downloadRate) {
-        this.downloadRate = downloadRate;
-    }
-
-    public boolean isHasCompleteFile() {
-        return hasCompleteFile;
-    }
-
-    public void setHasCompleteFile(boolean hasCompleteFile) {
-        this.hasCompleteFile = hasCompleteFile;
-    }
-
-    public boolean isInterested() {
-        return isInterested;
-    }
-
-    public void setInterested(boolean isInterested) {
-        this.isInterested = isInterested;
-    }
-
-    public boolean isInterest() {
-        return interest;
-    }
-
-    public void setInterest(boolean interest) {
-        this.interest = interest;
-    }
-
-    public boolean isChoked() {
-        return isChoked;
-    }
-
-    public void setChoked(boolean isChoked) {
-        this.isChoked = isChoked;
-    }
-
-    public boolean isChoke() {
-        return choke;
-    }
-
-    public void setChoke(boolean choke) {
-        this.choke = choke;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
         this.client = client;
     }
+    
+    public int getPeerID() {
+		return peerID;
+	}
 
+	public void setPeerID(int peerID) {
+		this.peerID = peerID;
+	}
 
-    public int getDownloadedPieceNum() {
-        return downloadedPieceNum;
-    }
+	public Socket getSocket() {
+		return socket;
+	}
 
-    public void setDownloadedPieceNum(int downloadedPieceNum) {
-        this.downloadedPieceNum = downloadedPieceNum;
-    }
+	public void setSocket(Socket socket) {
+		this.socket = socket;
+	}
 
+	public String getHostName() {
+		return hostName;
+	}
 
-    @Override
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public boolean isPreferred() {
+		return preferred;
+	}
+
+	public void setPreferred(boolean preferred) {
+		this.preferred = preferred;
+	}
+
+	public boolean isOptimisticallyUnchoked() {
+		return optimisticallyUnchoked;
+	}
+
+	public void setOptimisticallyUnchoked(boolean optimisticallyUnchoked) {
+		this.optimisticallyUnchoked = optimisticallyUnchoked;
+	}
+
+	public double getDownloadRate() {
+		return downloadRate;
+	}
+
+	public void setDownloadRate(double downloadRate) {
+		this.downloadRate = downloadRate;
+	}
+
+	public boolean isHasCompleteFile() {
+		return hasCompleteFile;
+	}
+
+	public void setHasCompleteFile(boolean hasCompleteFile) {
+		this.hasCompleteFile = hasCompleteFile;
+	}
+
+	public boolean isInterested() {
+		return isInterested;
+	}
+
+	public void setInterested(boolean isInterested) {
+		this.isInterested = isInterested;
+	}
+
+	public boolean isInterest() {
+		return interest;
+	}
+
+	public void setInterest(boolean interest) {
+		this.interest = interest;
+	}
+
+	public boolean isChoked() {
+		return isChoked;
+	}
+
+	public void setChoked(boolean isChoked) {
+		this.isChoked = isChoked;
+	}
+
+	public boolean isChoke() {
+		return choke;
+	}
+
+	public void setChoke(boolean choke) {
+		this.choke = choke;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	@Override
     public int compareTo(Object o) {
-        NeighborInfo neighborInfo = (NeighborInfo) o;
+        NeighborInfo neighborInfo = (NeighborInfo)o;
         return (int) (this.downloadRate - neighborInfo.downloadRate);
     }
 }

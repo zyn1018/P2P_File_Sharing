@@ -1,19 +1,19 @@
 package message;
 
-import commonutil.Utilities;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class InterestedMessage extends ActualMessage {
-    private static final long serialVersionUID = 6L;
+import commonutil.Utilities;
 
-    public InterestedMessage() throws IOException {
-        super(1, MessageType.interested);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        out.write(Utilities.intToByteArray(this.msgLength));
-        out.write(this.msgType.getMessageType());
-        this.messageBytes = out.toByteArray();
-        out.close();
-    }
+public class InterestedMessage extends ActualMessage{
+	private static final long serialVersionUID = 6L;
+	  
+	public InterestedMessage() throws IOException{
+		super(1,MessageType.interested);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		out.write(Utilities.intToByteArray(this.msgLength));
+		out.write(this.msgType.getMessageType());
+		this.messageBytes = out.toByteArray();
+		out.close();
+	}
 }

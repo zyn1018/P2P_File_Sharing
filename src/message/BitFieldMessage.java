@@ -1,32 +1,32 @@
 package message;
 
-import commonutil.Utilities;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class BitFieldMessage extends ActualMessage {
-    private static final long serialVersionUID = 9L;
-    private byte[] bitfield;
+import commonutil.Utilities;
 
-    public BitFieldMessage(byte[] bitfield) throws IOException {
-        super(1 + bitfield.length, MessageType.bitfield);
-        this.bitfield = bitfield;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        out.write(Utilities.intToByteArray(this.msgLength));
-        out.write(this.msgType.getMessageType());
-        out.write(this.bitfield);
+public class BitFieldMessage extends ActualMessage{
+	private static final long serialVersionUID = 9L;
+	private byte[] bitfield;
+	  
+	public BitFieldMessage(byte[] bitfield) throws IOException {
+		super(1 + bitfield.length, MessageType.bitfield);
+		this.bitfield = bitfield;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		out.write(Utilities.intToByteArray(this.msgLength));
+		out.write(this.msgType.getMessageType());
+		out.write(this.bitfield);
         this.messageBytes = out.toByteArray();
         out.close();
-    }
-
-    public byte[] getBitfield() {
-        return bitfield;
-    }
-
-    public void setBitfield(byte[] bitfield) {
-        this.bitfield = bitfield;
-    }
-
-
+	}
+	
+	public byte[] getBitfield(){
+		return bitfield;
+	}
+	
+	public void setBitfield(byte[] bitfield){
+		this.bitfield = bitfield;
+	}
+	
+	  
 }

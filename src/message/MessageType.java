@@ -1,25 +1,23 @@
 package message;
-
 import java.io.Serializable;
 
-public enum MessageType implements Serializable {
-    choke(0),
-    unchoke(1),
-    interested(2),
-    notinterested(3),
-    have(4),
-    bitfield(5),
-    request(6),
+public enum MessageType implements Serializable{
+    choke(0), 
+    unchoke(1), 
+    interested(2), 
+    notinterested(3), 
+    have(4), 
+    bitfield(5), 
+    request(6), 
     piece(7);
-
+    
     private byte msgType;
 
-    private MessageType(int msgType) {
-        this.msgType = (byte) msgType;
+    private MessageType(int msgType){
+        this.msgType = (byte)msgType;
     }
-
-   /* public static MessageType getMessageType(int value){
-        switch(value){
+    public static MessageType getMessageType(byte value){
+    	switch(value){ 
     		case 0: return MessageType.choke;
     		case 1: return MessageType.unchoke; 
     		case 2: return MessageType.interested;  
@@ -28,11 +26,11 @@ public enum MessageType implements Serializable {
 		   	case 5: return MessageType.bitfield; 
 		   	case 6: return MessageType.request;  
 		   	case 7: return MessageType.piece; 
-		   	default: return null; 
+		   	default:return null;
 		 }   
-    }*/
-
-    public byte getMessageType() {
-        return this.msgType;
     }
+    
+    public byte getMessageType(){
+        return this.msgType;
+    } 
 }

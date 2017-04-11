@@ -7,15 +7,14 @@ public class FileManager {
     private File myFile;
     private int FileSize;
     private int PieceSize;
-    private int pieceNum;
-    private int lastPieceSize;
-    private final int SIZEOFEACHCHUNK = 1 << 26; //file written in terms of 64 MB chunks
+    private File myDirectory;
 
-    public FileManager(int id, String PathofFile, int SizeofFile, int SizeofPiece) throws FileNotFoundException {
+    public FileManager(int id, String filename, int SizeofFile, int SizeofPiece) throws FileNotFoundException {
         this.setID(id);//peer id
-        this.myFile = new File(PathofFile);
         this.FileSize = SizeofFile;
         this.PieceSize = SizeofPiece;
+        createDirectory("peer_" + id);
+        this.myFile = new File("peer_" + id + "/" + filename);
     }
 
     public boolean createFile() throws IOException {
@@ -29,13 +28,15 @@ public class FileManager {
         }
 
         FileOutputStream fos = new FileOutputStream(myFile);
-        byte[] tempBuffer = new byte[SIZEOFEACHCHUNK];
-        for (int i = SIZEOFEACHCHUNK; i < FileSize; i += SIZEOFEACHCHUNK) {
+        byte[] tempBuffer = new byte[PieceSize];
+        for (int i = PieceSize; i < FileSize; i += PieceSize) {
             fos.write(tempBuffer);
         }
-        int remainingBytes = FileSize & (SIZEOFEACHCHUNK - 1);
-        tempBuffer = new byte[remainingBytes];
-        fos.write(tempBuffer);
+        int remainingBytes = FileSize % PieceSize;
+        if (remainingBytes > 0) {
+            byte[] remainingtempBuffer = new byte[remainingBytes];
+            fos.write(remainingtempBuffer);
+        }
         fos.close();
         return true;
     }
@@ -46,14 +47,16 @@ public class FileManager {
      */
     public byte[] readPiece(int pieceID) throws IOException {
         RandomAccessFile read = new RandomAccessFile(myFile, "r");
-        read.seek(Math.max(pieceID * PieceSize, 0));
+        read.seek(pieceID * PieceSize);
 
         byte[] buffer;
-        long remainingBytes = read.length() - (pieceID * PieceSize);
-        if (remainingBytes < PieceSize)
-            buffer = new byte[(int) remainingBytes];
-        else
-            buffer = new byte[PieceSize];
+        int remainingBytes = this.FileSize - pieceID * PieceSize;
+        if(remainingBytes<PieceSize){
+        	buffer = new byte[remainingBytes];
+        }
+        else{
+        	buffer = new byte[PieceSize];
+        }
         read.read(buffer);
         read.close();
         return buffer;
@@ -61,51 +64,11 @@ public class FileManager {
 
     public void writePiece(int pieceID, byte[] pieceData) throws IOException {
         RandomAccessFile read = new RandomAccessFile(this.myFile, "rws");
-        int offset = pieceID * PieceSize;
+        int offset = pieceID* PieceSize;
         int length = pieceData.length;
-
-        read.write(pieceData, offset, length);
+        read.seek(pieceID * PieceSize);
+        read.write(pieceData, 0, length);
         read.close();
-    }
-
-    public void writeLastPiece(byte[] pieceData) throws IOException {
-        RandomAccessFile read = new RandomAccessFile(this.myFile, "rws");
-        int offset = (pieceNum - 1) * PieceSize;
-        int length = lastPieceSize;
-        read.write(pieceData, offset, length);
-        read.close();
-
-    }
-
-    public byte[] readLastPiece() throws IOException {
-        RandomAccessFile read = new RandomAccessFile(myFile, "r");
-        read.seek(Math.max((pieceNum - 1) * PieceSize, 0));
-
-        byte[] buffer;
-        long remainingBytes = read.length() - ((pieceNum - 1) * PieceSize);
-        if (remainingBytes < PieceSize)
-            buffer = new byte[(int) remainingBytes];
-        else
-            buffer = new byte[PieceSize];
-        read.read(buffer);
-        read.close();
-        return buffer;
-    }
-
-    public int getPieceNum() {
-        return pieceNum;
-    }
-
-    public void setPieceNum(int pieceNum) {
-        this.pieceNum = pieceNum;
-    }
-
-    public int getLastPieceSize() {
-        return lastPieceSize;
-    }
-
-    public void setLastPieceSize(int lastPieceSize) {
-        this.lastPieceSize = lastPieceSize;
     }
 
     public File getMyFile() {
@@ -132,12 +95,12 @@ public class FileManager {
         PieceSize = pieceSize;
     }
 
-    public static boolean createDirectory(String DirectoryPath) {
-        File directory = new File(DirectoryPath);
-        if (directory.exists()) {
+    public boolean createDirectory(String DirectoryPath) {
+        this.myDirectory = new File(DirectoryPath);
+        if (this.myDirectory.exists()) {
             return true;
         }
-        return directory.mkdir();
+        return this.myDirectory.mkdir();
     }
 
     public int getID() {
