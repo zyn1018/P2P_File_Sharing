@@ -34,7 +34,6 @@ public class PreferredNeighborsHandler implements Runnable {
 
     public void run() {
         try {
-
             selectPrefferedNeighbors();
             Thread.sleep(commoncfg.getUnchoking_Interval() * 1000);
         } catch (Exception e) {
