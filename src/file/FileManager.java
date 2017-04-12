@@ -19,9 +19,7 @@ public class FileManager {
 
     public boolean createFile() throws IOException {
         if (myFile.exists()) {
-            if (!myFile.delete()) {
-                return false;
-            }
+            return false;
         }
         if (!myFile.createNewFile()) {
             return false;
@@ -51,11 +49,10 @@ public class FileManager {
 
         byte[] buffer;
         int remainingBytes = this.FileSize - pieceID * PieceSize;
-        if(remainingBytes<PieceSize){
-        	buffer = new byte[remainingBytes];
-        }
-        else{
-        	buffer = new byte[PieceSize];
+        if (remainingBytes < PieceSize) {
+            buffer = new byte[remainingBytes];
+        } else {
+            buffer = new byte[PieceSize];
         }
         read.read(buffer);
         read.close();
@@ -64,7 +61,7 @@ public class FileManager {
 
     public void writePiece(int pieceID, byte[] pieceData) throws IOException {
         RandomAccessFile read = new RandomAccessFile(this.myFile, "rws");
-        int offset = pieceID* PieceSize;
+        int offset = pieceID * PieceSize;
         int length = pieceData.length;
         read.seek(pieceID * PieceSize);
         read.write(pieceData, 0, length);

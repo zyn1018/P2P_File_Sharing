@@ -1,6 +1,7 @@
 package communication;
 
 import config.Commoncfg;
+import log.Logger;
 import message.ChokeMessage;
 import message.Message;
 import message.UnchokeMessage;
@@ -14,18 +15,22 @@ import java.util.Map;
 
 public class OptimisticalUnchokedHandler implements Runnable {
 
-    Map<Integer, NeighborInfo> neighborsMap;
-    Map<Integer, NeighborInfo> interestedNeighborMap;
-    List<NeighborInfo> chokedNeighbors;
-    NeighborInfo optimisticalUnchokedNeighbor;
-    Commoncfg commoncfg;
+    private Map<Integer, NeighborInfo> neighborsMap;
+    private Map<Integer, NeighborInfo> interestedNeighborMap;
+    private List<NeighborInfo> chokedNeighbors;
+    private NeighborInfo optimisticalUnchokedNeighbor;
+    private Commoncfg commoncfg;
+    private Logger logger;
+    private int myPeerID;
 
 
-    public OptimisticalUnchokedHandler(Commoncfg commoncfg, Map<Integer, NeighborInfo> neighborsMap) {
+    public OptimisticalUnchokedHandler(Commoncfg commoncfg, Map<Integer, NeighborInfo> neighborsMap, Logger logger, int myPeerID) {
         this.neighborsMap = neighborsMap;
         interestedNeighborMap = new HashMap<>();
         chokedNeighbors = new ArrayList<>();
         this.commoncfg = commoncfg;
+        this.logger = logger;
+        this.myPeerID = myPeerID;
     }
 
 
@@ -53,6 +58,7 @@ public class OptimisticalUnchokedHandler implements Runnable {
                 neighborsMap.get(prevOptimisticalUnchokedNeighbor.getPeerID()).setOptimisticallyUnchoked(false);
                 neighborsMap.get(prevOptimisticalUnchokedNeighbor.getPeerID()).setChoked(true);
                 neighborsMap.get(prevOptimisticalUnchokedNeighbor.getPeerID()).getClient().send(msg.getMessageBytes());
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -66,8 +72,10 @@ public class OptimisticalUnchokedHandler implements Runnable {
                 neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()).setOptimisticallyUnchoked(true);
                 neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()).setChoked(false);
                 neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()).getClient().send(msg.getMessageBytes());
-                System.out.println("Unchoke " + neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()));
-
+                System.out.println("Unchoke " + neighborsMap.get(optimisticalUnchokedNeighbor.getPeerID()).getPeerID());
+                if (myPeerID != optimisticalUnchokedNeighbor.getPeerID()) {
+                    logger.OptUnchokedNeighbours("" + myPeerID, "" + optimisticalUnchokedNeighbor.getPeerID());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

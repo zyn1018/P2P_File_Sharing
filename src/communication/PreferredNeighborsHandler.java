@@ -2,6 +2,7 @@ package communication;
 
 import config.Commoncfg;
 import file.Bitfield;
+import log.Logger;
 import message.ChokeMessage;
 import message.Message;
 import message.UnchokeMessage;
@@ -10,22 +11,26 @@ import peer.NeighborInfo;
 import java.util.*;
 
 public class PreferredNeighborsHandler implements Runnable {
-    Map<Integer, NeighborInfo> neighborsMap;
-    Map<Integer, NeighborInfo> interestedNeighborMap;
-    Map<Integer, NeighborInfo> prefferedNeighbors;
-    List<NeighborInfo> downLoadRateList;
-    Commoncfg commoncfg;
-    Bitfield myBitfield;
+    private Map<Integer, NeighborInfo> neighborsMap;
+    private Map<Integer, NeighborInfo> interestedNeighborMap;
+    private Map<Integer, NeighborInfo> prefferedNeighbors;
+    private List<NeighborInfo> downLoadRateList;
+    private Commoncfg commoncfg;
+    private Bitfield myBitfield;
+    private Logger logger;
+    private int myPeerID;
 
 
     //Constructor
-    public PreferredNeighborsHandler(Commoncfg commoncfg, Map<Integer, NeighborInfo> neighborsMap, Bitfield myBitfield) {
+    public PreferredNeighborsHandler(Commoncfg commoncfg, Map<Integer, NeighborInfo> neighborsMap, Bitfield myBitfield, Logger logger, int myPeerID) {
         this.myBitfield = myBitfield;
         this.neighborsMap = neighborsMap;
         this.commoncfg = commoncfg;
         interestedNeighborMap = new HashMap<>();
         downLoadRateList = new ArrayList<>();
         prefferedNeighbors = new HashMap<>();
+        this.logger = logger;
+        this.myPeerID = myPeerID;
 
     }
 
@@ -33,9 +38,11 @@ public class PreferredNeighborsHandler implements Runnable {
         try {
             while (true) {
                 selectPrefferedNeighbors();
-                System.out.println("Select preffered neighbors as follows: ");
-                for (Integer peerID : prefferedNeighbors.keySet()) {
-                    System.out.println("Peer: " + peerID);
+                if (!prefferedNeighbors.isEmpty()) {
+                    System.out.println("Select preffered neighbors as follows: ");
+                    for (Integer peerID : prefferedNeighbors.keySet()) {
+                        System.out.println("Peer: " + peerID);
+                    }
                 }
                 Map<Integer, Integer> prevPieceNumMap = getPieceNum();
                 Thread.sleep(commoncfg.getUnchoking_Interval() * 1000);
@@ -69,14 +76,14 @@ public class PreferredNeighborsHandler implements Runnable {
 
             if (myBitfield.isHasCompleteFile() == true) {
                 Set<Integer> set = new HashSet<Integer>(count);
-                while(set.size() < count){
+                while (set.size() < count) {
                     Random random = new Random();
                     int index = random.nextInt(downLoadRateList.size());
                     set.add(index);
                 }
                 Iterator<Integer> iterator = set.iterator();
 
-                while(iterator.hasNext()){
+                while (iterator.hasNext()) {
                     NeighborInfo newPreffered = downLoadRateList.get(iterator.next());
                     prefferedNeighbors.put(newPreffered.getPeerID(), newPreffered);
                     neighborsMap.get(newPreffered.getPeerID()).setPreferred(true);
@@ -91,19 +98,21 @@ public class PreferredNeighborsHandler implements Runnable {
 
                 }
             }
-
+            if (!prevPreffered.equals(prefferedNeighbors)) {
+                logger.PrefNeighbours("" + myPeerID, prefferedNeighbors);
+            }
             if (prevPreffered != null) {
                 for (Integer peerID : prefferedNeighbors.keySet()) {
-                   if (!prevPreffered.containsKey(peerID)) {
+                    if (!prevPreffered.containsKey(peerID)) {
                         Message msg = new UnchokeMessage();
-                        System.out.println("Send an unchoke message when prevPreffered != null");
+                        System.out.println("Send an unchoke message");
                         neighborsMap.get(peerID).getClient().send(msg.getMessageBytes());
                     }
                 }
             } else {
                 for (Integer peerID : prefferedNeighbors.keySet()) {
                     Message msg = new UnchokeMessage();
-                    System.out.println("Send an unchoke message else");
+                    System.out.println("Send an unchoke message");
                     neighborsMap.get(peerID).getClient().send(msg.getMessageBytes());
 
                 }
@@ -114,7 +123,7 @@ public class PreferredNeighborsHandler implements Runnable {
                 if ((neighbor.isOptimisticallyUnchoked() == false && neighbor.isChoked() == false)
                         && (neighbor.isPreferred() == false && neighbor.isChoked() == false)) {
                     Message msg = new ChokeMessage();
-                    System.out.println("Send a choke message ");
+                    System.out.println("Send a choke message");
                     neighbor.getClient().send(msg.getMessageBytes());
 
                 }
@@ -167,9 +176,9 @@ public class PreferredNeighborsHandler implements Runnable {
     }
 
     private Map<Integer, NeighborInfo> getPrevPrefferedNeighbors() {
-    	Map<Integer, NeighborInfo> prev = new HashMap<Integer,NeighborInfo>();
-        for(Integer peerID: this.prefferedNeighbors.keySet()){
-        	prev.put(peerID, this.prefferedNeighbors.get(peerID));
+        Map<Integer, NeighborInfo> prev = new HashMap<Integer, NeighborInfo>();
+        for (Integer peerID : this.prefferedNeighbors.keySet()) {
+            prev.put(peerID, this.prefferedNeighbors.get(peerID));
         }
         return prev;
     }
